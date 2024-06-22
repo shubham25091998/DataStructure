@@ -27,12 +27,14 @@ void bst_postorder_traversal(struct bst*, int);
 void bst_remove(struct bst*, int);
 int bst_search(struct bst*, int);
 void bst_destroy(struct bst**);
+void bst_inorder_successor(struct bst*,int, int*);
 
 struct bst_node* helper_get_node(int);
 void helper_preorder_rec(struct bst_node*);
 void helper_inorder_rec(struct bst_node*);
 void helper_postorder_rec(struct bst_node*);
 struct bst_node* helper_search_data(struct bst*, int);
+//struct bst_node* helper_inorder_successor(struct bst_node*, int value);
 
 struct bst* bst_create(){
 	struct bst* p_bst = (struct bst*)malloc(sizeof(struct bst));
@@ -308,10 +310,47 @@ void bst_destroy(struct bst** pp_bst){
 	*pp_bst = NULL;
 	
 }
+
+void bst_inorder_successor(struct bst* p_bst, int value, int* succ_data){
+	
+	struct bst_node* p_node = NULL;
+	struct bst_node* p_run = NULL;
+	struct bst_node* parent = NULL;
+	if(p_bst == NULL){
+		printf("Invalid BST\n");
+		return;
+	}
+	
+	p_node = helper_search_data(p_bst,value);
+	if(p_node == NULL){
+		printf("Data not exist\n");
+		return;
+	}
+	
+	if(p_node->right != NULL){
+		p_run = p_node->right;
+		while(p_run->left != NULL){
+			p_run = p_run->left;
+		}
+		*succ_data = p_run->data;
+		return;
+	}else{
+		parent = p_node->parent;
+		p_run = p_node;
+		while(parent != NULL && parent->right == p_run){
+			p_run = parent;
+			parent = parent->parent;
+		}
+		*succ_data = p_run->data;
+		return;
+	}
+}
+
 int main(){
 	
 	int data[] = {230, 1231, 12, 24, 4456, 34,324,23,32421,34,345,6,45,723,624,627,893,7235,352,832,323,334,456};
 	struct bst* p_bst = NULL;
+	int succ;
 	
 	p_bst = bst_create();
 	
@@ -330,5 +369,7 @@ int main(){
 		printf("Data not exist\n");
 	}
 	
+	bst_inorder_successor(p_bst, 34,&succ);
+	printf("Successor = %d\n",succ);
 	bst_destroy(&p_bst);
 }
