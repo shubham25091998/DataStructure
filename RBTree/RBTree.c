@@ -52,6 +52,7 @@ struct rbtree* rbtree_create(){
 	p_rbtree->nil->right = NULL;
 	p_rbtree->nil->parent = NULL;
 	p_rbtree->nil->color = BLACK;
+	p_rbtree->nil->data = -1;
 	p_rbtree->root = p_rbtree->nil;
 	p_rbtree->no_elements = 0;
 	return p_rbtree;
